@@ -18,13 +18,21 @@ struct MovieListView: View {
                 nav.openMovie(movie)
             } label: {
                 HStack {
-                    AsyncImage(url: movie.posterURL) { image in
-                        image.resizable()
-                    } placeholder: {
-                        ProgressView()
+                    AsyncImage(url: movie.posterURL) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                        case .success(let image):
+                            image.resizable()
+                        case .failure:
+                            Image(systemName: "photo")
+                        @unknown default:
+                            Image(systemName:"questionmark.circle")
+                        }
                     }
                     .frame(width: 80, height: 120)
                     .cornerRadius(8)
+
 
                     Text(movie.title)
                         .font(.headline)
